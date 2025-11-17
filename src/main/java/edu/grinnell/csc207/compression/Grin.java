@@ -1,5 +1,6 @@
 package edu.grinnell.csc207.compression;
 
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -22,9 +23,11 @@ public class Grin {
      * BitInputStream, consuming 8 bits at a time.
      * @param file the file to read
      * @return a freqency map for the given file
+     * @throws IOException 
      */
-    public static Map<Short, Integer> createFrequencyMap (String file) {
-        // TODO: fill me in!
+    public static Map<Short, Integer> createFrequencyMap (String file) throws IOException {
+        BitInputStream input = new BitInputStream(file);
+        Map<Short,Integer> freq = new HashMap <> ();
         return null;
     }
 

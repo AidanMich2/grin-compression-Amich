@@ -1,6 +1,9 @@
 package edu.grinnell.csc207.compression;
 
+import java.util.Collection;
 import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Set;
 
 /**
  * A HuffmanTree derives a space-efficient coding of a collection of byte
@@ -16,12 +19,72 @@ import java.util.Map;
  */
 public class HuffmanTree {
 
+    public class Node{
+        Short character;
+        int charFreq;
+        Node leftChild;
+        Node rightChild;
+        int childrenSum;
+        public Node (Short character, int charFreq, Node leftChild, Node rightChild, int childrenSum){
+            this.character = character;
+            this.charFreq = charFreq;
+            this.leftChild = leftChild;
+            this.rightChild = rightChild;
+            this.childrenSum = childrenSum;
+        }
+
+        public int compareTo (Node node){
+            if (this.charFreq < node.charFreq){
+                return -1;
+            }
+            else if (this.charFreq == node.charFreq){
+                return 0;
+            }
+            else{
+                return 1;
+            }
+        }
+    }
+
+    
+
+    // public class Priority{
+    //     Short character;
+    //     Integer frequency;
+    //     public Priority (Short character, Integer frequency){
+    //         this.character = character;
+    //         this.frequency = frequency;
+    //     }
+    // }
+
+
     /**
      * Constructs a new HuffmanTree from a frequency map.
      * @param freqs a map from 9-bit values to frequencies.
      */
     public HuffmanTree (Map<Short, Integer> freqs) {
-        // TODO: fill me in!
+        // Set<Map.Entry <Short, Integer>> list = freqs.entrySet();
+        // PriorityQueue pq = new PriorityQueue<>();
+        Short [] arr = (Short []) freqs.keySet ().toArray ();
+        PriorityQueue pq = new PriorityQueue <Node>();
+        for (int i = 0; i < freqs.size (); i++){
+            pq.add (new Node (arr [i], freqs.get (arr [i]), null,null,0));
+        }
+
+        if (pq.size () == 0){
+            return;
+        }
+        else if (pq.size () == 1){
+            return;
+        } else {
+            while(pq.size() >= 2){
+            for( int j = 0; j < pq.size(); j++){
+                Node temp1 = (Node) pq.poll();
+                Node temp2 = (Node) pq.poll();
+                pq.add(new Node(null, temp1.charFreq + temp2.charFreq, temp1, temp2, 0));
+            }
+            }
+        }
     }
 
     /**
