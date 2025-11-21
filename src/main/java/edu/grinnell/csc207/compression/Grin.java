@@ -1,6 +1,7 @@
 package edu.grinnell.csc207.compression;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -28,7 +29,18 @@ public class Grin {
     public static Map<Short, Integer> createFrequencyMap (String file) throws IOException {
         BitInputStream input = new BitInputStream(file);
         Map<Short,Integer> freq = new HashMap <> ();
-        return null;
+
+        while(input.hasBits ()){
+            short temp = (short)input.readBits (8);
+            if (freq.containsKey(temp)){
+                freq.put (temp, freq.get (temp) + 1);
+            }
+            else{
+                freq.put (temp,1);
+            }
+        }
+        input.finalize();//double check later.
+        return freq;
     }
 
     /**
@@ -44,9 +56,14 @@ public class Grin {
     /**
      * The entry point to the program.
      * @param args the command-line arguments.
+     * @throws IOException 
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         // TODO: fill me in!
-        System.out.println("Usage: java Grin <encode|decode> <infile> <outfile>");
+        // System.out.println("Usage: java Grin <encode|decode> <infile> <outfile>");
+
+        System.out.println (createFrequencyMap("/Users/aidanmichaelson/Desktop/grin-compression-Amich/files/wikipedia-huffman-coding.txt").toString ());
+
+        
     }
 }

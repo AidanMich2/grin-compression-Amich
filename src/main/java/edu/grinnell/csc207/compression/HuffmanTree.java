@@ -1,9 +1,11 @@
 package edu.grinnell.csc207.compression;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
+import java.util.Optional;
 
 /**
  * A HuffmanTree derives a space-efficient coding of a collection of byte
@@ -18,23 +20,26 @@ import java.util.Set;
  * our byte values.
  */
 public class HuffmanTree {
-
+    private Node root;
     public class Node{
-        Short character;
-        int charFreq;
-        Node leftChild;
-        Node rightChild;
-        int childrenSum;
-        public Node (Short character, int charFreq, Node leftChild, Node rightChild, int childrenSum){
+        private Short character;
+        private int charFreq;
+        private Node leftChild;
+        private Node rightChild;
+        public Node (Short character, int charFreq, Node leftChild, Node rightChild){
             this.character = character;
             this.charFreq = charFreq;
             this.leftChild = leftChild;
             this.rightChild = rightChild;
-            this.childrenSum = childrenSum;
         }
 
+
+        /**
+         * Acknowledgement: Used stack overflow to understand how to change what field is compared within a priority queue.
+         * 
+         */
         public int compareTo (Node node){
-            if (this.charFreq < node.charFreq){
+            if (charFreq< node.charFreq){
                 return -1;
             }
             else if (this.charFreq == node.charFreq){
@@ -65,24 +70,19 @@ public class HuffmanTree {
     public HuffmanTree (Map<Short, Integer> freqs) {
         // Set<Map.Entry <Short, Integer>> list = freqs.entrySet();
         // PriorityQueue pq = new PriorityQueue<>();
+        Short eof = (short) 100000000;
+        freqs.put(eof,1);
         Short [] arr = (Short []) freqs.keySet ().toArray ();
-        PriorityQueue pq = new PriorityQueue <Node>();
-        for (int i = 0; i < freqs.size (); i++){
-            pq.add (new Node (arr [i], freqs.get (arr [i]), null,null,0));
+        PriorityQueue <Node> pq = new PriorityQueue <Node>();
+        for (int i = 0; i < arr.length; i++){
+            pq.add (new Node (arr [i], freqs.get (arr [i]), null,null));
         }
-
-        if (pq.size () == 0){
-            return;
-        }
-        else if (pq.size () == 1){
-            return;
-        } else {
-            while(pq.size() >= 2){
+        while(pq.size() >= 2){
             for( int j = 0; j < pq.size(); j++){
                 Node temp1 = (Node) pq.poll();
                 Node temp2 = (Node) pq.poll();
-                pq.add(new Node(null, temp1.charFreq + temp2.charFreq, temp1, temp2, 0));
-            }
+                root = new Node(null, temp1.charFreq + temp2.charFreq, temp1, temp2);
+                pq.add(root);
             }
         }
     }
@@ -101,7 +101,16 @@ public class HuffmanTree {
      * @param out the output file as a BitOutputStream
      */
     public void serialize (BitOutputStream out) {
-        // TODO: fill me in!
+        serializeHelper(out, root);
+    }
+
+    public void serializeHelper (BitOutputStream out, Node cur){
+        if(root.leftChild.equals(null)){
+            out.writeBit(1);
+        } else {
+            out.writeBit(0);
+            out.writeBits(root.character, 9);//figure out later whether 8 or 9 bits to write, ie. whether we need to manually add a 0 to character
+        }
     }
    
     /**
@@ -112,7 +121,26 @@ public class HuffmanTree {
      * @param out the file to write the compressed output to.
      */
     public void encode (BitInputStream in, BitOutputStream out) {
-        // TODO: fill me in!
+        Map<Short, String> encodedMap = new HashMap <> ();
+        encodeHelper("", encodedMap, root);
+
+    }
+
+    public void encodeHelper (String code, Map<Short,String> encodedMap, Node cur){
+        if (!cur.leftChild.equals (null)){
+            encodedMap.put (cur.character,code);
+        }
+        encodeHelper("0" + code, encodedMap, cur.leftChild);
+        encodeHelper("1" + code, encodedMap, cur.rightChild);
+
+        /**
+         * if it is a leaf then add it and the current code to the map, and then do a recursive call
+         * if it is not a leaf and instead a internal node, determined by having children then dont add it to the map and
+         * instead go straight to the recursive call.
+         * each recursive call will move either left or right and alter the code by accordingly adding 0 or 1.
+         * 
+         * 
+         */
     }
 
     /**
