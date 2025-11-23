@@ -13,9 +13,12 @@ public class Grin {
      * .grin file denoted by outfile.
      * @param infile the file to decode
      * @param outfile the file to ouptut to
+     * @throws IOException 
      */
-    public static void decode (String infile, String outfile) {
-        // TODO: fill me in!
+    public static void decode (String infile, String outfile) throws IOException {
+        BitInputStream in = new BitInputStream(infile);
+        BitOutputStream out = new BitOutputStream(outfile);
+        HuffmanTree.decode (in,out);
     }
 
     /**
@@ -48,9 +51,12 @@ public class Grin {
      * .grin file denoted by outfile.
      * @param infile the file to encode.
      * @param outfile the file to write the output to.
+     * @throws IOException 
      */
-    public static void encode(String infile, String outfile) {
-        // TODO: fill me in!
+    public static void encode(String infile, String outfile) throws IOException {
+        BitInputStream in = new BitInputStream(infile);
+        BitOutputStream out = new BitOutputStream(outfile);
+        HuffmanTree.encode (in,out);
     }
 
     /**
@@ -62,7 +68,10 @@ public class Grin {
         // TODO: fill me in!
         // System.out.println("Usage: java Grin <encode|decode> <infile> <outfile>");
 
-        System.out.println (createFrequencyMap("/Users/aidanmichaelson/Desktop/grin-compression-Amich/files/wikipedia-huffman-coding.txt").toString ());
+        // System.out.println (createFrequencyMap("/Users/aidanmichaelson/Desktop/grin-compression-Amich/files/wikipedia-huffman-coding.txt").toString ());
+        HuffmanTree hf = new HuffmanTree (createFrequencyMap ("files/huffman-example.txt"));
+        encode ("files/huffman-example.txt", "files/test.grin");
+        
 
         
     }

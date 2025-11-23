@@ -76,4 +76,8 @@ public class BitInputStream {
     protected void finalize() {
         close();
     }
+
+    public int getDigits (){
+        return digits;
+    }
 }
