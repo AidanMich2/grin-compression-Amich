@@ -21,7 +21,7 @@ import java.util.Iterator;
  * our byte values.
  */
 public class HuffmanTree {
-    private Short eof = (short) 100000000;
+    private static Short eof = (short) 100000000;
     private static Node root;
     public class Node implements Comparable <Node>{
         private Short character;
@@ -98,7 +98,29 @@ public class HuffmanTree {
      */
     public HuffmanTree (BitInputStream in) {
         int fileType = in.readBits (32);
-        // while ()
+        HuffmanTreeHelper (in, root);//might want to come up with a different global variable for root? specifically for decoding
+        in.finalize ();
+    }
+
+
+    public Node HuffmanTreeHelper (BitInputStream in, Node cur){
+        int current = in.readBit ();
+        if (current == -1){
+            return null;
+            
+        }
+        else if (current == 1){
+            System.out.println ("Enetered 1");
+            cur = new Node(null, 0, null, null);
+            cur.leftChild = HuffmanTreeHelper(in, cur.leftChild);
+            cur.rightChild = HuffmanTreeHelper(in, cur.rightChild);
+        } else {
+            System.out.println ("Enetered leaf");
+            Node leaf = new Node ((short) in.readBits (9), 0, null, null);//leaf
+            return leaf;
+        }
+        return null;
+        
     }
 
     /**
@@ -137,12 +159,12 @@ public class HuffmanTree {
      */
     public static void encode (BitInputStream in, BitOutputStream out) {
         serialize (out);
-        // Map<Short, String> encodedMap = new HashMap <> ();
-        // encodeHelper("", encodedMap, root);
-        // while (in.getDigits () >= 9){// double check logic later
-        //     Short temp = (short) in.readBits (8);
-        //     out.writeBits(Integer.parseInt (encodedMap.get (temp)), encodedMap.get (temp).length ());
-        // }
+        Map<Short, String> encodedMap = new HashMap <> ();
+        encodeHelper("", encodedMap, root);
+        while (in.getDigits () >= 9){// double check logic later
+            Short temp = (short) in.readBits (8);
+            out.writeBits(Integer.parseInt (encodedMap.get (temp)), encodedMap.get (temp).length ());
+        }
         in.finalize ();
         out.finalize ();
         
@@ -179,6 +201,26 @@ public class HuffmanTree {
      * @param out the file to write the decompressed output to.
      */
     public static void decode (BitInputStream in, BitOutputStream out) {
-        // TODO: fill me in!
+        Node currentNode = root;
+        while (true){
+            System.out.println ("entered while");
+            int cur = in.readBit ();
+            if (cur == 0){
+                
+                currentNode = currentNode.leftChild;
+            }
+            else if (cur == 1){
+                currentNode = currentNode.rightChild;
+            }
+            if (currentNode.leftChild == null){//leaf
+                if (currentNode.character == eof){
+                    break;
+                }
+                out.writeBits (currentNode.character, 8);
+                currentNode = root;
+            }
+        }
+        out.finalize ();
+        in.finalize ();
     }
 }

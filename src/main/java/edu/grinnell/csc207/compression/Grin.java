@@ -69,8 +69,12 @@ public class Grin {
         // System.out.println("Usage: java Grin <encode|decode> <infile> <outfile>");
 
         // System.out.println (createFrequencyMap("/Users/aidanmichaelson/Desktop/grin-compression-Amich/files/wikipedia-huffman-coding.txt").toString ());
-        HuffmanTree hf = new HuffmanTree (createFrequencyMap ("files/huffman-example.txt"));
-        encode ("files/huffman-example.txt", "files/test.grin");
+        // HuffmanTree hf = new HuffmanTree (createFrequencyMap ("files/huffman-example.txt"));
+        // encode ("files/huffman-example.txt", "files/test.grin");
+        BitInputStream bitty = new BitInputStream("files/huffman-example.grin");
+        BitOutputStream bitOut = new BitOutputStream("files/decoded.txt");
+        HuffmanTree hf = new HuffmanTree (bitty);
+        hf.decode (bitty, bitOut);
         
 
         
