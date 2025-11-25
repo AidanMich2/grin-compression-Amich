@@ -72,7 +72,7 @@ public class Grin {
         // HuffmanTree hf = new HuffmanTree (createFrequencyMap ("files/huffman-example.txt"));
         // encode ("files/huffman-example.txt", "files/test.grin");
         BitInputStream bitty = new BitInputStream("files/huffman-example.grin");
-        BitOutputStream bitOut = new BitOutputStream("files/decoded.txt");
+        BitOutputStream bitOut = new BitOutputStream("files/decode.txt");
         HuffmanTree hf = new HuffmanTree (bitty);
         hf.decode (bitty, bitOut);
         

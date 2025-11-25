@@ -23,6 +23,7 @@ import java.util.Iterator;
 public class HuffmanTree {
     private static Short eof = (short) 100000000;
     private static Node root;
+    private static Node rootForDecode;
     public class Node implements Comparable <Node>{
         private Short character;
         private int charFreq;
@@ -98,28 +99,34 @@ public class HuffmanTree {
      */
     public HuffmanTree (BitInputStream in) {
         int fileType = in.readBits (32);
-        HuffmanTreeHelper (in, root);//might want to come up with a different global variable for root? specifically for decoding
-        in.finalize ();
+        rootForDecode = HuffmanTreeHelper (in, rootForDecode, 0);//might want to come up with a different global variable for root? specifically for decoding
+
+        // in.finalize ();
     }
 
 
-    public Node HuffmanTreeHelper (BitInputStream in, Node cur){
+    public Node HuffmanTreeHelper (BitInputStream in, Node cur, int n){
+        
         int current = in.readBit ();
         if (current == -1){
             return null;
             
         }
         else if (current == 1){
-            System.out.println ("Enetered 1");
+            // System.out.println ("Entered 1");
             cur = new Node(null, 0, null, null);
-            cur.leftChild = HuffmanTreeHelper(in, cur.leftChild);
-            cur.rightChild = HuffmanTreeHelper(in, cur.rightChild);
+            cur.leftChild = HuffmanTreeHelper(in, cur.leftChild, n);
+            cur.rightChild = HuffmanTreeHelper(in, cur.rightChild, n);
+            return cur;
+            // rootForDecode = cur;
+            
         } else {
-            System.out.println ("Enetered leaf");
+            // System.out.println ("Enetered leaf");
             Node leaf = new Node ((short) in.readBits (9), 0, null, null);//leaf
             return leaf;
         }
-        return null;
+        // System.out.println (cur.character);
+        // return null;
         
     }
 
@@ -201,9 +208,11 @@ public class HuffmanTree {
      * @param out the file to write the decompressed output to.
      */
     public static void decode (BitInputStream in, BitOutputStream out) {
-        Node currentNode = root;
-        while (true){
-            System.out.println ("entered while");
+        System.out.println (rootForDecode.rightChild.rightChild.character);
+        Node currentNode = rootForDecode;
+        boolean running = true;
+        while (running){
+            // System.out.println ("entered while");
             int cur = in.readBit ();
             if (cur == 0){
                 
@@ -213,11 +222,13 @@ public class HuffmanTree {
                 currentNode = currentNode.rightChild;
             }
             if (currentNode.leftChild == null){//leaf
-                if (currentNode.character == eof){
+                if (currentNode.character == 256){
+                    System.out.println ("EOF");
+                    running = false;
                     break;
                 }
                 out.writeBits (currentNode.character, 8);
-                currentNode = root;
+                currentNode = rootForDecode;
             }
         }
         out.finalize ();
