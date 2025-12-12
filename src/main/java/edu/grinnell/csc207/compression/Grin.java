@@ -18,7 +18,7 @@ public class Grin {
     public static void decode (String infile, String outfile) throws IOException {
         BitInputStream in = new BitInputStream(infile);
         BitOutputStream out = new BitOutputStream(outfile);
-        HuffmanTree.decode (in,out);
+        HuffmanTree.decode(in,out);
     }
 
     /**
@@ -31,15 +31,14 @@ public class Grin {
      */
     public static Map<Short, Integer> createFrequencyMap (String file) throws IOException {
         BitInputStream input = new BitInputStream(file);
-        Map<Short,Integer> freq = new HashMap <> ();
+        Map<Short,Integer> freq = new HashMap<>();
 
-        while(input.hasBits ()){
-            short temp = (short)input.readBits (8);
-            if (freq.containsKey(temp)){
-                freq.put (temp, freq.get (temp) + 1);
-            }
-            else{
-                freq.put (temp,1);
+        while(input.hasBits()) {
+            short temp = (short) input.readBits(8);
+            if (freq.containsKey(temp)) {
+                freq.put(temp, freq.get(temp) + 1);
+            } else {
+                freq.put(temp, 1);
             }
         }
         input.finalize();//double check later.
@@ -56,7 +55,7 @@ public class Grin {
     public static void encode(String infile, String outfile) throws IOException {
         BitInputStream in = new BitInputStream(infile);
         BitOutputStream out = new BitOutputStream(outfile);
-        HuffmanTree.encode (in,out);
+        HuffmanTree.encode(in,out);
     }
 
     /**
@@ -68,13 +67,14 @@ public class Grin {
         // TODO: fill me in!
         // System.out.println("Usage: java Grin <encode|decode> <infile> <outfile>");
 
-        // System.out.println (createFrequencyMap("/Users/aidanmichaelson/Desktop/grin-compression-Amich/files/wikipedia-huffman-coding.txt").toString ());
+        // System.out.println (createFrequencyMap("/Users/aidanmichaelson/Desktop/grin-compression-Amich
+        // /files/wikipedia-huffman-coding.txt").toString ());
         // HuffmanTree hf = new HuffmanTree (createFrequencyMap ("files/huffman-example.txt"));
         // encode ("files/huffman-example.txt", "files/test.grin");
         BitInputStream bitty = new BitInputStream("files/huffman-example.grin");
         BitOutputStream bitOut = new BitOutputStream("files/decode.txt");
-        HuffmanTree hf = new HuffmanTree (bitty);
-        hf.decode (bitty, bitOut);
+        HuffmanTree hf = new HuffmanTree(bitty);
+        hf.decode(bitty, bitOut);
         
 
         
