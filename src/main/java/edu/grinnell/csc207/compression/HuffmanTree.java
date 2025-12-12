@@ -45,8 +45,9 @@ public class HuffmanTree {
         }
 
         /**
-         * Acknowledgement: Used stack overflow to understand how to change what field is 
-         * compared within a priority queue. Used to use the char frequency field to compare two nodes
+         * Acknowledgement: Used stack overflow to understand how to change what 
+         * field is compared within a priority queue. Used to use the char 
+         * frequency field to compare two nodes
          * @param node is the node being compared to.
          * @return an integer representing which is greater.
          */
@@ -111,7 +112,7 @@ public class HuffmanTree {
             return cur;
         } else {
             Node leaf = new Node((short) in.readBits(9), 
-            0, null, null);
+                0, null, null);
             return leaf;
         }       
     }
