@@ -21,11 +21,22 @@ public class HuffmanTree {
     private static Short eof = (short) 100000000;
     private static Node root;
     private static Node rootForDecode;
+    /**
+     * Node class that is used in HuffmanTree. Contains the character, that
+     * characters frequency, and a left and right child which are also nodes.
+     */
     public class Node implements Comparable<Node> {
         private Short character;
         private int charFreq;
         private Node leftChild;
         private Node rightChild;
+        /**
+         * Constructs a node.
+         * @param character is the main value that is stored.
+         * @param charFreq the number of times that this char is recorded.
+         * @param leftChild a node to the left-below of this node.
+         * @param rightChild a node to the right-below of this node.
+         */
         public Node(Short character, int charFreq, Node leftChild, Node rightChild) {
             this.character = character;
             this.charFreq = charFreq;
@@ -40,7 +51,7 @@ public class HuffmanTree {
          * @return an integer representing which is greater.
          */
         public int compareTo(Node node) {
-            if (charFreq< node.charFreq) {
+            if (charFreq < node.charFreq) {
                 return -1;
             } else if (this.charFreq == node.charFreq) {
                 return 0;
@@ -55,15 +66,15 @@ public class HuffmanTree {
      * @param freqs a map from 9-bit values to frequencies.
      */
     public HuffmanTree(Map<Short, Integer> freqs) {
-        freqs.put(eof,1);
+        freqs.put(eof, 1);
         Iterator<Short> iterate = freqs.keySet().iterator();
         PriorityQueue<Node> pq = new PriorityQueue<Node>();
         while (iterate.hasNext()) {
             Short temp = iterate.next();
-            pq.add(new Node (temp, freqs.get(temp), null,null));
+            pq.add(new Node(temp, freqs.get(temp), null, null));
         }    
-        while(pq.size() >= 2) {
-            for(int j = 0; j < pq.size(); j++) {
+        while (pq.size() >= 2) {
+            for (int j = 0; j < pq.size(); j++) {
                 Node temp1 = (Node) pq.poll();
                 Node temp2 = (Node) pq.poll();
                 root = new Node(null, temp1.charFreq + temp2.charFreq, temp1, temp2);
@@ -78,7 +89,7 @@ public class HuffmanTree {
      */
     public HuffmanTree(BitInputStream in) {
         int fileType = in.readBits(32);
-        rootForDecode = HuffmanTreeHelper(in, rootForDecode);
+        rootForDecode = huffmanTreeHelper(in, rootForDecode);
     }
 
 
@@ -88,18 +99,19 @@ public class HuffmanTree {
      * @param cur is the current node being tracked for recursion.
      * @return the node that we are on, eventually constructing the entire tree.
      */
-    public Node HuffmanTreeHelper(BitInputStream in, Node cur) {
+    public Node huffmanTreeHelper(BitInputStream in, Node cur) {
         int current = in.readBit();
         if (current == -1) {
             return null;
             
         } else if (current == 1) {
             cur = new Node(null, 0, null, null);
-            cur.leftChild = HuffmanTreeHelper(in, cur.leftChild);
-            cur.rightChild = HuffmanTreeHelper(in, cur.rightChild);
+            cur.leftChild = huffmanTreeHelper(in, cur.leftChild);
+            cur.rightChild = huffmanTreeHelper(in, cur.rightChild);
             return cur;
         } else {
-            Node leaf = new Node ((short) in.readBits(9), 0, null, null);//leaf
+            Node leaf = new Node((short) in.readBits(9), 
+            0, null, null);
             return leaf;
         }       
     }
@@ -123,7 +135,7 @@ public class HuffmanTree {
         System.out.println("went into serializeHelper");
         if (cur == null) {
             return;
-        } else if(cur.leftChild != null) {
+        } else if (cur.leftChild != null) {
             out.writeBit(1);
             serializeHelper(out, cur.leftChild);
             serializeHelper(out, cur.rightChild);
@@ -142,7 +154,7 @@ public class HuffmanTree {
      * @param out the file to write the compressed output to.
      */
     public static void encode(BitInputStream in, BitOutputStream out) {
-        serialize (out);
+        serialize(out);
         Map<Short, String> encodedMap = new HashMap<>();
         encodeHelper("", encodedMap, root);
         while (in.getDigits() >= 9) {
@@ -154,21 +166,24 @@ public class HuffmanTree {
     }
 
     /**
-     * Helper function for encoding a stream. if it is a leaf then add it and the current code to the map, and then do a recursive call
-     * if it is not a leaf and instead a internal node, determined by having children then dont add it to the map and
+     * Helper function for encoding a stream. if it is a leaf then add it 
+     * and the current code to the map, and then do a recursive call
+     * if it is not a leaf and instead a internal node, determined by having 
+     * children then dont add it to the map and
      * instead go straight to the recursive call.
-     * each recursive call will move either left or right and alter the code by accordingly adding 0 or 1
+     * each recursive call will move either left or right and alter the code by 
+     * accordingly adding 0 or 1
      * @param code the encoded string.
      * @param encodedMap the map that we constructed used in the encoding process.
      * @param cur is the current node that the function is on.
      */
-    public static void encodeHelper(String code, Map<Short,String> encodedMap, Node cur) {
+    public static void encodeHelper(String code, Map<Short, String> encodedMap, Node cur) {
         if (cur == null) {
             return;
         }
         if (cur.leftChild == null) {
             System.out.println(cur.character + ": " + code);
-            encodedMap.put(cur.character,code);
+            encodedMap.put(cur.character, code);
         }
         encodeHelper("0" + code, encodedMap, cur.leftChild);
         encodeHelper("1" + code, encodedMap, cur.rightChild);
@@ -182,21 +197,20 @@ public class HuffmanTree {
      * @param in the file to decompress.
      * @param out the file to write the decompressed output to.
      */
-    public static void decode (BitInputStream in, BitOutputStream out) {
-        System.out.println (rootForDecode.rightChild.rightChild.character);
+    public static void decode(BitInputStream in, BitOutputStream out) {
+        System.out.println(rootForDecode.rightChild.rightChild.character);
         Node currentNode = rootForDecode;
         boolean running = true;
         while (running) {
             int cur = in.readBit();
             if (cur == 0) {
                 currentNode = currentNode.leftChild;
-            }
-            else if (cur == 1) {
+            } else if (cur == 1) {
                 currentNode = currentNode.rightChild;
             }
             if (currentNode.leftChild == null) {
                 if (currentNode.character == 256) {
-                    System.out.println ("EOF");
+                    System.out.println("EOF");
                     running = false;
                     break;
                 }
