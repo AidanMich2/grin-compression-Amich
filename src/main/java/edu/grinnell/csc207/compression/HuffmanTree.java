@@ -21,7 +21,7 @@ public class HuffmanTree {
     private static Short eof = (short) 100000000;
     private static Node root;
     private static Node rootForDecode;
-    public class Node implements Comparable <Node> {
+    public class Node implements Comparable<Node> {
         private Short character;
         private int charFreq;
         private Node leftChild;
@@ -33,11 +33,11 @@ public class HuffmanTree {
             this.rightChild = rightChild;
         }
 
-
         /**
-         * Acknowledgement: Used stack overflow to understand how to change what field is compared within a priority queue.
-         * Used to use the char frequency field to compare two nodes
-         * @return an integer representing which is greater
+         * Acknowledgement: Used stack overflow to understand how to change what field is 
+         * compared within a priority queue. Used to use the char frequency field to compare two nodes
+         * @param node is the node being compared to.
+         * @return an integer representing which is greater.
          */
         public int compareTo(Node node) {
             if (charFreq< node.charFreq) {
@@ -56,14 +56,12 @@ public class HuffmanTree {
      */
     public HuffmanTree(Map<Short, Integer> freqs) {
         freqs.put(eof,1);
-        Iterator <Short> iterate = freqs.keySet().iterator();
-        PriorityQueue <Node> pq = new PriorityQueue <Node>();
+        Iterator<Short> iterate = freqs.keySet().iterator();
+        PriorityQueue<Node> pq = new PriorityQueue<Node>();
         while (iterate.hasNext()) {
             Short temp = iterate.next();
             pq.add(new Node (temp, freqs.get(temp), null,null));
-        }
-        
-        
+        }    
         while(pq.size() >= 2) {
             for(int j = 0; j < pq.size(); j++) {
                 Node temp1 = (Node) pq.poll();
@@ -125,11 +123,11 @@ public class HuffmanTree {
         System.out.println("went into serializeHelper");
         if (cur == null) {
             return;
-        } else if(cur.leftChild != null){//internal node
+        } else if(cur.leftChild != null) {
             out.writeBit(1);
             serializeHelper(out, cur.leftChild);
             serializeHelper(out, cur.rightChild);
-        } else {//lEAF
+        } else {
             out.writeBit(0);
             out.writeBits(cur.character, 9);
         }
@@ -196,7 +194,7 @@ public class HuffmanTree {
             else if (cur == 1) {
                 currentNode = currentNode.rightChild;
             }
-            if (currentNode.leftChild == null) {//leaf
+            if (currentNode.leftChild == null) {
                 if (currentNode.character == 256) {
                     System.out.println ("EOF");
                     running = false;
