@@ -68,11 +68,11 @@ public class Grin {
         // System.out.println("Usage: java Grin <encode|decode> <infile> <outfile>");
         BitInputStream bitty = new BitInputStream(args[1]);
         BitOutputStream bitOut = new BitOutputStream(args[2]);
-        HuffmanTree hf = new HuffmanTree(bitty);
+        //HuffmanTree hf = new HuffmanTree(bitty);
         if (args[0].equals("encode")) {
-            hf.encode(bitty, bitOut);
+            HuffmanTree.encode(bitty, bitOut);
         } else if (args[0].equals("decode")) {
-            hf.decode(bitty, bitOut);
+            HuffmanTree.decode(bitty, bitOut);
         }
     }
 }
