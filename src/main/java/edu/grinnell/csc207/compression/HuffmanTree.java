@@ -154,7 +154,7 @@ public class HuffmanTree {
      * @param in the file to compress.
      * @param out the file to write the compressed output to.
      */
-    public static void encode(BitInputStream in, BitOutputStream out) {
+    public void encode(BitInputStream in, BitOutputStream out) {
         serialize(out);
         Map<Short, String> encodedMap = new HashMap<>();
         encodeHelper("", encodedMap, root);
@@ -198,7 +198,7 @@ public class HuffmanTree {
      * @param in the file to decompress.
      * @param out the file to write the decompressed output to.
      */
-    public static void decode(BitInputStream in, BitOutputStream out) {
+    public void decode(BitInputStream in, BitOutputStream out) {
         System.out.println(rootForDecode.rightChild.rightChild.character);
         Node currentNode = rootForDecode;
         boolean running = true;

@@ -19,7 +19,7 @@ public class Grin {
         BitInputStream in = new BitInputStream(infile);
         BitOutputStream out = new BitOutputStream(outfile);
         HuffmanTree hf = new HuffmanTree(in);
-        HuffmanTree.decode(in, out);
+        hf.decode(in, out);
         in.close();
         out.close();
     }
@@ -60,7 +60,7 @@ public class Grin {
         HuffmanTree hf = new HuffmanTree(freq);
         BitInputStream in = new BitInputStream(infile);
         BitOutputStream out = new BitOutputStream(outfile);
-        HuffmanTree.encode(in, out);
+        hf.encode(in, out);
         in.close();
         out.close();
     }
