@@ -71,12 +71,13 @@ public class Grin {
         // /grin-compression-Amich/files/wikipedia-huffman-coding.txt").toString ());
         // HuffmanTree hf = new HuffmanTree (createFrequencyMap ("files/huffman-example.txt"));
         // encode ("files/huffman-example.txt", "files/test.grin");
-        BitInputStream bitty = new BitInputStream("files/huffman-example.grin");
-        BitOutputStream bitOut = new BitOutputStream("files/decode.txt");
+        BitInputStream bitty = new BitInputStream("files/" + args[1]);
+        BitOutputStream bitOut = new BitOutputStream("files/" + args[2]);
         HuffmanTree hf = new HuffmanTree(bitty);
-        hf.decode(bitty, bitOut);
-        
-
-        
+        if (args[0] == "encode"){
+            hf.encode(bitty, bitOut);
+        } else if (args[0] == "decode") {
+            hf.decode(bitty, bitOut);
+        }
     }
 }
