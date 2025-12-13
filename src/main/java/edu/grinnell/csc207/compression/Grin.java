@@ -53,6 +53,8 @@ public class Grin {
      * @throws IOException 
      */
     public static void encode(String infile, String outfile) throws IOException {
+        Map<Short, Integer> freq = createFrequencyMap(infile);
+        HuffmanTree hf = new HuffmanTree(freq);
         BitInputStream in = new BitInputStream(infile);
         BitOutputStream out = new BitOutputStream(outfile);
         HuffmanTree.encode(in, out);
@@ -66,13 +68,12 @@ public class Grin {
     public static void main(String[] args) throws IOException {
         // TODO: fill me in!
         // System.out.println("Usage: java Grin <encode|decode> <infile> <outfile>");
-        BitInputStream bitty = new BitInputStream(args[1]);
-        BitOutputStream bitOut = new BitOutputStream(args[2]);
-        //HuffmanTree hf = new HuffmanTree(bitty);
+        String in = args[1];
+        String out = args[2];
         if (args[0].equals("encode")) {
-            HuffmanTree.encode(bitty, bitOut);
+            encode(in, out);
         } else if (args[0].equals("decode")) {
-            HuffmanTree.decode(bitty, bitOut);
+            decode(in, out);
         }
     }
 }
