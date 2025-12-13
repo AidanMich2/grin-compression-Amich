@@ -19,8 +19,8 @@ import java.util.PriorityQueue;
  */
 public class HuffmanTree {
     private static Short eof = (short) 100000000;
-    private static Node root;
-    private static Node rootForDecode;
+    private Node root;
+    private Node rootForDecode;
     /**
      * Node class that is used in HuffmanTree. Contains the character, that
      * characters frequency, and a left and right child which are also nodes.
@@ -90,7 +90,7 @@ public class HuffmanTree {
      */
     public HuffmanTree(BitInputStream in) {
         int fileType = in.readBits(32);
-        rootForDecode = huffmanTreeHelper(in, rootForDecode);
+        this.rootForDecode = huffmanTreeHelper(in, rootForDecode);
     }
 
 
@@ -122,7 +122,7 @@ public class HuffmanTree {
      * serialized format.
      * @param out the output file as a BitOutputStream
      */
-    public static void serialize(BitOutputStream out) {
+    public void serialize(BitOutputStream out) {
         System.out.println("went into serialize");
         serializeHelper(out, root);
     }
@@ -155,7 +155,7 @@ public class HuffmanTree {
      * @param out the file to write the compressed output to.
      */
     public void encode(BitInputStream in, BitOutputStream out) {
-        serialize(out);
+        this.serialize(out);
         Map<Short, String> encodedMap = new HashMap<>();
         encodeHelper("", encodedMap, root);
         while (in.getDigits() >= 9) {
@@ -186,8 +186,8 @@ public class HuffmanTree {
             System.out.println(cur.character + ": " + code);
             encodedMap.put(cur.character, code);
         }
-        encodeHelper("0" + code, encodedMap, cur.leftChild);
-        encodeHelper("1" + code, encodedMap, cur.rightChild);
+        encodeHelper(code + "0", encodedMap, cur.leftChild);
+        encodeHelper(code + "1", encodedMap, cur.rightChild);
     }
 
     /**
@@ -200,7 +200,7 @@ public class HuffmanTree {
      */
     public void decode(BitInputStream in, BitOutputStream out) {
         System.out.println(rootForDecode.rightChild.rightChild.character);
-        Node currentNode = rootForDecode;
+        Node currentNode = this.rootForDecode;
         boolean running = true;
         while (running) {
             int cur = in.readBit();
