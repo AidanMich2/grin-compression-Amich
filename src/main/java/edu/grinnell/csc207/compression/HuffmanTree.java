@@ -154,8 +154,12 @@ public class HuffmanTree {
         serialize(out);
         Map<Short, String> encodedMap = new HashMap<>();
         encodeHelper("", encodedMap, root);
-        while (in.getDigits() >= 9) {
-            Short temp = (short) in.readBits(8);
+        while (in.hasBits()) {
+            int tempo = in.readBits(8);
+            if (tempo == -1) {
+                break;
+            }
+            Short temp = (short) tempo;
             out.writeBits(Integer.parseInt(encodedMap.get(temp)), encodedMap.get(temp).length());
         }
         for (int i = 0; i < encodedMap.get(eof).length(); i++) {
