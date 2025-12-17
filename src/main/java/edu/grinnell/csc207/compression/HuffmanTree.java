@@ -75,13 +75,11 @@ public class HuffmanTree {
             pq.add(new Node(temp, freqs.get(temp), null, null));
         }    
         while (pq.size() >= 2) {
-            for (int j = 0; j < pq.size(); j++) {
-                Node temp1 = (Node) pq.poll();
-                Node temp2 = (Node) pq.poll();
-                root = new Node(null, temp1.charFreq + temp2.charFreq, temp1, temp2);
-                pq.add(root);
-            }
-        }
+            Node temp1 = pq.poll();
+            Node temp2 = pq.poll();
+            Node tempor = new Node(null, temp1.charFreq + temp2.charFreq, temp1, temp2);
+            pq.add(tempor);
+        } root = pq.poll();
     }
 
     /**
@@ -89,7 +87,7 @@ public class HuffmanTree {
      * @param in the input file (as a BitInputStream)
      */
     public HuffmanTree(BitInputStream in) {
-        int fileType = in.readBits(32);
+        //int fileType = in.readBits(32);
         rootForDecode = huffmanTreeHelper(in, rootForDecode);
     }
 
