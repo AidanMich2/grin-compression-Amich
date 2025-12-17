@@ -18,7 +18,7 @@ import java.util.PriorityQueue;
  * our byte values.
  */
 public class HuffmanTree {
-    private static Short eof = (short) 100000000;
+    private static Short eof = (short) 256;
     private static Node root;
     private static Node rootForDecode;
     /**
@@ -160,6 +160,9 @@ public class HuffmanTree {
             Short temp = (short) in.readBits(8);
             out.writeBits(Integer.parseInt(encodedMap.get(temp)), encodedMap.get(temp).length());
         }
+        for (int i = 0; i < encodedMap.get(eof).length(); i++) {
+            out.writeBit(Character.getNumericValue(encodedMap.get(eof).charAt(i)));
+        }
         in.finalize();
         out.finalize();
     }
@@ -208,7 +211,7 @@ public class HuffmanTree {
                 currentNode = currentNode.rightChild;
             }
             if (currentNode.leftChild == null) {
-                if (currentNode.character == 256) {
+                if (currentNode.character.equals(eof)) {
                     running = false;
                     break;
                 }
