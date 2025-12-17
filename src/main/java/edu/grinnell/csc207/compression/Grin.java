@@ -18,10 +18,7 @@ public class Grin {
     public static void decode(String infile, String outfile) throws IOException {
         BitInputStream in = new BitInputStream(infile);
         BitOutputStream out = new BitOutputStream(outfile);
-        HuffmanTree hf = new HuffmanTree(in);
-        hf.decode(in, out);
-        in.close();
-        out.close();
+        HuffmanTree.decode(in, out);
     }
 
     /**
@@ -56,13 +53,9 @@ public class Grin {
      * @throws IOException 
      */
     public static void encode(String infile, String outfile) throws IOException {
-        Map<Short, Integer> freq = createFrequencyMap(infile);
-        HuffmanTree hf = new HuffmanTree(freq);
         BitInputStream in = new BitInputStream(infile);
         BitOutputStream out = new BitOutputStream(outfile);
-        hf.encode(in, out);
-        in.close();
-        out.close();
+        HuffmanTree.encode(in, out);
     }
 
     /**
@@ -73,12 +66,17 @@ public class Grin {
     public static void main(String[] args) throws IOException {
         // TODO: fill me in!
         // System.out.println("Usage: java Grin <encode|decode> <infile> <outfile>");
-        String in = args[1];
-        String out = args[2];
-        if (args[0].equals("encode")) {
-            encode(in, out);
-        } else if (args[0].equals("decode")) {
-            decode(in, out);
-        }
+
+        // System.out.println (createFrequencyMap("/Users/aidanmichaelson/Desktop
+        // /grin-compression-Amich/files/wikipedia-huffman-coding.txt").toString ());
+        // HuffmanTree hf = new HuffmanTree (createFrequencyMap ("files/huffman-example.txt"));
+        // encode ("files/huffman-example.txt", "files/test.grin");
+        if (args[0].equals("encode")){
+            encode(args[1], args[2]);
+        } else if (args[0].equals("decode")){
+            decode(args[1], args[2]);
+        } else {
+            System.err.println("Unknown command");
+        }    
     }
 }

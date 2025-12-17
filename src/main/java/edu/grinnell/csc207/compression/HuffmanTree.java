@@ -19,8 +19,8 @@ import java.util.PriorityQueue;
  */
 public class HuffmanTree {
     private static Short eof = (short) 100000000;
-    private Node root;
-    private Node rootForDecode;
+    private static Node root;
+    private static Node rootForDecode;
     /**
      * Node class that is used in HuffmanTree. Contains the character, that
      * characters frequency, and a left and right child which are also nodes.
@@ -90,7 +90,7 @@ public class HuffmanTree {
      */
     public HuffmanTree(BitInputStream in) {
         int fileType = in.readBits(32);
-        this.rootForDecode = huffmanTreeHelper(in, rootForDecode);
+        rootForDecode = huffmanTreeHelper(in, rootForDecode);
     }
 
 
@@ -122,7 +122,7 @@ public class HuffmanTree {
      * serialized format.
      * @param out the output file as a BitOutputStream
      */
-    public void serialize(BitOutputStream out) {
+    public static void serialize(BitOutputStream out) {
         System.out.println("went into serialize");
         serializeHelper(out, root);
     }
@@ -154,8 +154,8 @@ public class HuffmanTree {
      * @param in the file to compress.
      * @param out the file to write the compressed output to.
      */
-    public void encode(BitInputStream in, BitOutputStream out) {
-        this.serialize(out);
+    public static void encode(BitInputStream in, BitOutputStream out) {
+        serialize(out);
         Map<Short, String> encodedMap = new HashMap<>();
         encodeHelper("", encodedMap, root);
         while (in.getDigits() >= 9) {
@@ -198,9 +198,9 @@ public class HuffmanTree {
      * @param in the file to decompress.
      * @param out the file to write the decompressed output to.
      */
-    public void decode(BitInputStream in, BitOutputStream out) {
+    public static void decode(BitInputStream in, BitOutputStream out) {
         System.out.println(rootForDecode.rightChild.rightChild.character);
-        Node currentNode = this.rootForDecode;
+        Node currentNode = rootForDecode;
         boolean running = true;
         while (running) {
             int cur = in.readBit();
