@@ -17,7 +17,8 @@ public class Grin {
      */
     public static void decode(String infile, String outfile) throws IOException {
         BitInputStream in = new BitInputStream(infile);
-        BitOutputStream out = new BitOutputStream(outfile);
+        BitOutputStream out = new BitOutputStream(outfile);   
+        HuffmanTree hf = new HuffmanTree(in);
         HuffmanTree.decode(in, out);
     }
 
@@ -53,10 +54,10 @@ public class Grin {
      * @throws IOException 
      */
     public static void encode(String infile, String outfile) throws IOException {
-        BitInputStream in = new BitInputStream(infile);
-        BitOutputStream out = new BitOutputStream(outfile);
         Map<Short, Integer> freqMap = createFrequencyMap(infile);     
         HuffmanTree hf = new HuffmanTree(freqMap);
+        BitInputStream in = new BitInputStream(infile);
+        BitOutputStream out = new BitOutputStream(outfile);
         HuffmanTree.encode(in, out);
     }
 

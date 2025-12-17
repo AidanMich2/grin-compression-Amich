@@ -133,7 +133,6 @@ public class HuffmanTree {
      * @param cur the node that is currently on, for tracking purposes.
      */
     public static void serializeHelper(BitOutputStream out, Node cur) {
-        System.out.println("went into serializeHelper");
         if (cur == null) {
             return;
         } else if (cur.leftChild != null) {
