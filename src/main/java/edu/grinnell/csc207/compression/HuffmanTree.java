@@ -123,7 +123,6 @@ public class HuffmanTree {
      * @param out the output file as a BitOutputStream
      */
     public static void serialize(BitOutputStream out) {
-        System.out.println("went into serialize");
         serializeHelper(out, root);
     }
 
@@ -182,7 +181,6 @@ public class HuffmanTree {
             return;
         }
         if (cur.leftChild == null) {
-            System.out.println(cur.character + ": " + code);
             encodedMap.put(cur.character, code);
         }
         encodeHelper(code + "0", encodedMap, cur.leftChild);
@@ -198,7 +196,6 @@ public class HuffmanTree {
      * @param out the file to write the decompressed output to.
      */
     public static void decode(BitInputStream in, BitOutputStream out) {
-        System.out.println(rootForDecode.rightChild.rightChild.character);
         Node currentNode = rootForDecode;
         boolean running = true;
         while (running) {
@@ -210,7 +207,6 @@ public class HuffmanTree {
             }
             if (currentNode.leftChild == null) {
                 if (currentNode.character == 256) {
-                    System.out.println("EOF");
                     running = false;
                     break;
                 }
