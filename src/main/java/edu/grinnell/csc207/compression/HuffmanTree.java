@@ -200,7 +200,9 @@ public class HuffmanTree {
         boolean running = true;
         while (running) {
             int cur = in.readBit();
-            if (cur == 0) {
+            if (cur == -1) {
+                break;
+            } else if (cur == 0) {
                 currentNode = currentNode.leftChild;
             } else if (cur == 1) {
                 currentNode = currentNode.rightChild;
