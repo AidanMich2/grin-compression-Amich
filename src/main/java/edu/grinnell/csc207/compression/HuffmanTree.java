@@ -154,16 +154,14 @@ public class HuffmanTree {
         serialize(out);
         Map<Short, String> encodedMap = new HashMap<>();
         encodeHelper("", encodedMap, root);
-        while (in.hasBits()) {
-            int tempo = in.readBits(8);
-            if (tempo == -1) {
-                break;
+        while (in.getDigits() >= 9) {
+            Short temp = (short) in.readBits(8);
+            for (int i = 0; i < encodedMap.get(temp).length(); i++) {
+                out.writeBit(Character.getNumericValue(encodedMap.get(temp).charAt(i)));
             }
-            Short temp = (short) tempo;
-            out.writeBits(Integer.parseInt(encodedMap.get(temp)), encodedMap.get(temp).length());
         }
-        for (int i = 0; i < encodedMap.get(eof).length(); i++) {
-            out.writeBit(Character.getNumericValue(encodedMap.get(eof).charAt(i)));
+        for (int j = 0; j < encodedMap.get(eof).length(); j++) {
+            out.writeBit(Character.getNumericValue(encodedMap.get(eof).charAt(j)));
         }
         in.finalize();
         out.finalize();
@@ -207,7 +205,8 @@ public class HuffmanTree {
             int cur = in.readBit();
             if (cur == -1) {
                 break;
-            } else if (cur == 0) {
+            } 
+            if (cur == 0) {
                 currentNode = currentNode.leftChild;
             } else if (cur == 1) {
                 currentNode = currentNode.rightChild;
