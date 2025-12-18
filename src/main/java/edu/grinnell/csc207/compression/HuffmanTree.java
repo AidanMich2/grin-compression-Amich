@@ -156,15 +156,13 @@ public class HuffmanTree {
         encodeHelper("", encodedMap, root);
         while (in.getDigits() >= 9) {
             Short temp = (short) in.readBits(8);
-            // for (int i = 0; i < encodedMap.get(temp).length(); i++) {
-            //     out.writeBit(Character.getNumericValue(encodedMap.get(temp).charAt(i)));
-            // }
-            out.writeBits(Integer.parseInt(encodedMap.get(temp)), encodedMap.get(temp).length());
+            for (int i = 0; i < encodedMap.get(temp).length(); i++) {
+                out.writeBit(Character.getNumericValue(encodedMap.get(temp).charAt(i)));
+            }
         }
-        // for (int j = 0; j < encodedMap.get(eof).length(); j++) {
-        //     out.writeBit(Character.getNumericValue(encodedMap.get(eof).charAt(j)));
-        // }
-        out.writeBits(Integer.parseInt(encodedMap.get(eof)), encodedMap.get(eof).length());
+        for (int j = 0; j < encodedMap.get(eof).length(); j++) {
+            out.writeBit(Character.getNumericValue(encodedMap.get(eof).charAt(j)));
+        }
         in.finalize();
         out.finalize();
     }
